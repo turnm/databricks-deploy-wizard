@@ -1,0 +1,444 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generators are deterministic — aws-no-admin-evaluate > bicep output matches snapshot 1`] = `null`;
+
+exports[`generators are deterministic — aws-no-admin-evaluate > checklist output matches snapshot 1`] = `
+"# Databricks deployment checklist
+
+Personalised for: **AWS**
+
+## Your setup
+- **Cloud:** AWS
+- **Entry route:** Express setup
+- **Workspace type:** Serverless workspace
+- **Region:** us-east-1
+- **Goal:** evaluate
+- **Networking/residency:** none
+- **Estimated time to first query:** Minutes
+
+## Steps
+
+- [ ] **Sign up** — Go to the Databricks AWS express setup page and sign up with your business email — no AWS credentials required.
+- [ ] **Workspace is provisioned automatically** — A serverless workspace deploys immediately, backed by Databricks-hosted compute — nothing to configure in your AWS account yet.
+- [ ] **Run your first query** — Open SQL editor or a notebook, attach to serverless compute, and run a query against a sample or uploaded dataset.
+
+## Things to watch for
+
+- No AWS admin needed for this — express setup only needs a business email. You can start right away.
+
+---
+
+Generated 2026-07-09 — verify against docs.databricks.com/aws as appropriate.
+"
+`;
+
+exports[`generators are deterministic — aws-no-admin-evaluate > cloudformation output matches snapshot 1`] = `null`;
+
+exports[`generators are deterministic — aws-no-admin-evaluate > terraform output matches snapshot 1`] = `
+[
+  {
+    "contents": "variable "region" {
+  description = "AWS region for the workspace"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "prefix" {
+  description = "Prefix used to name generated resources"
+  type        = string
+  default     = "databricks-us-east-1"
+}
+
+variable "cidr_block" {
+  description = "CIDR block for the workspace VPC"
+  type        = string
+  default     = "10.4.0.0/16"
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "variables.tf",
+    "language": "hcl",
+  },
+  {
+    "contents": "terraform {
+  required_providers {
+    databricks = {
+      source = "databricks/databricks"
+    }
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.region
+}
+
+provider "databricks" {
+  alias      = "mws"
+  host       = "https://accounts.cloud.databricks.com"
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "provider.tf",
+    "language": "hcl",
+  },
+  {
+    "contents": "# Serverless workspace — provisioned automatically via Express setup,
+# no infrastructure to apply yet. Nothing below is created unless you
+# uncomment it, kept here so the classic path is one step away when you
+# outgrow serverless (e.g. networking or residency requirements appear).
+
+# resource "aws_vpc" "workspace" {
+#   cidr_block = var.cidr_block
+# }
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "main.tf",
+    "language": "hcl",
+  },
+]
+`;
+
+exports[`generators are deterministic — azure-admin-private-networking > bicep output matches snapshot 1`] = `
+{
+  "contents": "param location string = 'UK South'
+param prefix string = 'databricks-uk-south'
+param pricingTier string = 'premium'
+
+// VNet injection must be chosen at workspace creation — it cannot be
+// retrofitted later, so the network is defined alongside the workspace.
+resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
+  name: '\${prefix}-vnet'
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        '10.179.0.0/16'
+      ]
+    }
+    subnets: [
+      {
+        name: 'public-subnet'
+        properties: {
+          addressPrefix: '10.179.0.0/18'
+          delegations: [
+            {
+              name: 'databricks-delegation'
+              properties: {
+                serviceName: 'Microsoft.Databricks/workspaces'
+              }
+            }
+          ]
+        }
+      }
+      {
+        name: 'private-subnet'
+        properties: {
+          addressPrefix: '10.179.64.0/18'
+          delegations: [
+            {
+              name: 'databricks-delegation'
+              properties: {
+                serviceName: 'Microsoft.Databricks/workspaces'
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+resource workspace 'Microsoft.Databricks/workspaces@2024-05-01' = {
+  name: '\${prefix}-workspace'
+  location: location
+  sku: {
+    name: pricingTier
+  }
+  properties: {
+    managedResourceGroupId: resourceId('Microsoft.Resources/resourceGroups', '\${prefix}-managed-rg')
+    parameters: {
+      customVirtualNetworkId: {
+        value: vnet.id
+      }
+      customPublicSubnetName: {
+        value: 'public-subnet'
+      }
+      customPrivateSubnetName: {
+        value: 'private-subnet'
+      }
+      enableNoPublicIp: {
+        value: true
+      }
+    }
+  }
+}
+
+// Review before applying. This is a starting point, not production hardening.
+",
+  "filename": "workspace.bicep",
+  "language": "bicep",
+}
+`;
+
+exports[`generators are deterministic — azure-admin-private-networking > checklist output matches snapshot 1`] = `
+"# Databricks deployment checklist
+
+Personalised for: **Azure**
+
+## Your setup
+- **Cloud:** Azure
+- **Entry route:** Azure Portal
+- **Workspace type:** VNet-injected workspace (Premium)
+- **Region:** UK South
+- **Pricing tier:** Premium
+- **Goal:** production
+- **Networking/residency:** private
+- **Estimated time to first query:** A few hours (networking decisions are made at creation time)
+
+## Steps
+
+- [ ] **Open the Azure Portal** — Go to portal.azure.com → Create a resource → search "Azure Databricks".
+- [ ] **Configure the workspace** — Pick your subscription, resource group and region. Choose the Premium pricing tier, and enable VNet injection now — it cannot be added after creation.
+- [ ] **Wire up Private Link and NPIP** — Enable Private Link and Secure Cluster Connectivity (No Public IP) as part of the same deployment — see the generated Bicep for the exact resources.
+- [ ] **Run your first query** — Launch the workspace, attach to a SQL warehouse or cluster, and run a query against a sample dataset.
+
+## Things to watch for
+
+- VNet injection must be chosen at workspace creation — it cannot be retrofitted onto an existing workspace.
+- Enable Private Link and Secure Cluster Connectivity (No Public IP) as part of the same deployment.
+
+---
+
+Generated 2026-07-09 — verify against portal.azure.com and docs.databricks.com/azure as appropriate.
+"
+`;
+
+exports[`generators are deterministic — azure-admin-private-networking > cloudformation output matches snapshot 1`] = `null`;
+
+exports[`generators are deterministic — azure-admin-private-networking > terraform output matches snapshot 1`] = `
+[
+  {
+    "contents": "variable "region" {
+  description = "Azure region for the workspace"
+  type        = string
+  default     = "UK South"
+}
+
+variable "prefix" {
+  description = "Prefix used to name generated resources"
+  type        = string
+  default     = "databricks-uk-south"
+}
+
+variable "resource_group_name" {
+  description = "Resource group to deploy the workspace into"
+  type        = string
+  default     = "\${var.prefix}-rg"
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "variables.tf",
+    "language": "hcl",
+  },
+  {
+    "contents": "terraform {
+  required_providers {
+    databricks = {
+      source = "databricks/databricks"
+    }
+    azurerm = {
+      source = "hashicorp/azurerm"
+    }
+  }
+}
+
+provider "azurerm" {
+  features {}
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "provider.tf",
+    "language": "hcl",
+  },
+  {
+    "contents": "resource "azurerm_resource_group" "this" {
+  name     = var.resource_group_name
+  location = var.region
+}
+
+# VNet injection must be chosen at workspace creation — it cannot be
+# retrofitted onto an existing workspace, hence it's set directly on
+# azurerm_databricks_workspace below.
+resource "azurerm_virtual_network" "this" {
+  name                = "\${var.prefix}-vnet"
+  address_space       = ["10.179.0.0/16"]
+  location            = azurerm_resource_group.this.location
+  resource_group_name  = azurerm_resource_group.this.name
+}
+
+resource "azurerm_subnet" "public" {
+  name                 = "\${var.prefix}-public"
+  resource_group_name  = azurerm_resource_group.this.name
+  virtual_network_name = azurerm_virtual_network.this.name
+  address_prefixes     = ["10.179.0.0/18"]
+
+  delegation {
+    name = "databricks-delegation"
+    service_delegation {
+      name    = "Microsoft.Databricks/workspaces"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
+
+resource "azurerm_subnet" "private" {
+  name                 = "\${var.prefix}-private"
+  resource_group_name  = azurerm_resource_group.this.name
+  virtual_network_name = azurerm_virtual_network.this.name
+  address_prefixes     = ["10.179.64.0/18"]
+
+  delegation {
+    name = "databricks-delegation"
+    service_delegation {
+      name    = "Microsoft.Databricks/workspaces"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
+
+resource "azurerm_databricks_workspace" "this" {
+  name                        = "\${var.prefix}-workspace"
+  resource_group_name         = azurerm_resource_group.this.name
+  location                    = azurerm_resource_group.this.location
+  sku                         = "premium"
+
+  custom_parameters {
+    virtual_network_id                                  = azurerm_virtual_network.this.id
+    public_subnet_name                                  = azurerm_subnet.public.name
+    private_subnet_name                                 = azurerm_subnet.private.name
+    public_subnet_network_security_group_association_id  = azurerm_subnet.public.id
+    private_subnet_network_security_group_association_id = azurerm_subnet.private.id
+    no_public_ip                                        = true
+  }
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "main.tf",
+    "language": "hcl",
+  },
+]
+`;
+
+exports[`generators are deterministic — gcp-no-admin > bicep output matches snapshot 1`] = `null`;
+
+exports[`generators are deterministic — gcp-no-admin > checklist output matches snapshot 1`] = `
+"# Databricks deployment checklist
+
+Personalised for: **GCP**
+
+## Your setup
+- **Cloud:** GCP
+- **Entry route:** Google Cloud Marketplace
+- **Workspace type:** Standard workspace
+- **Region:** europe-west2
+- **Goal:** evaluate
+- **Networking/residency:** none
+- **Estimated time to first query:** A few days (waiting on admin for the Marketplace subscription)
+
+## Ask your admin first
+
+- [ ] Send the request below to **Your GCP billing/project administrator**
+
+> Hi — I'd like to subscribe to Databricks via Google Cloud Marketplace for our project. This needs billing enabled and Billing Account Administrator + Project Owner rights, which I don't have. Could you either do the subscription step yourself (Marketplace → Databricks → Subscribe), or grant me those roles for about 15 minutes so I can do it? Compute will run on GCE inside our own project either way.
+
+## Steps
+
+- [ ] **Open Google Cloud Marketplace** — Search "Databricks" on GCP Marketplace and click Subscribe.
+- [ ] **Sign up with a Google identity** — Complete signup — the subscriber becomes the first account admin.
+- [ ] **Create a workspace** — From the account console, create a workspace in a project with sufficient CPU/IP quota.
+- [ ] **Run your first query** — Launch the workspace and run a query against a sample dataset on GCE-backed compute.
+
+## Things to watch for
+
+- You'll need your GCP admin for about 15 minutes — there is no email-only route on GCP.
+
+---
+
+Generated 2026-07-09 — verify against console.cloud.google.com and docs.databricks.com/gcp as appropriate.
+"
+`;
+
+exports[`generators are deterministic — gcp-no-admin > cloudformation output matches snapshot 1`] = `null`;
+
+exports[`generators are deterministic — gcp-no-admin > terraform output matches snapshot 1`] = `
+[
+  {
+    "contents": "variable "project" {
+  description = "GCP project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region for the workspace"
+  type        = string
+  default     = "europe-west2"
+}
+
+variable "prefix" {
+  description = "Prefix used to name generated resources"
+  type        = string
+  default     = "databricks-europe-west2"
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "variables.tf",
+    "language": "hcl",
+  },
+  {
+    "contents": "terraform {
+  required_providers {
+    databricks = {
+      source = "databricks/databricks"
+    }
+    google = {
+      source = "hashicorp/google"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project
+  region  = var.region
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "provider.tf",
+    "language": "hcl",
+  },
+  {
+    "contents": "# Standard workspace — Databricks manages networking in a default VPC.
+
+resource "databricks_mws_workspaces" "this" {
+  account_id     = "" # fill in your Databricks account ID
+  workspace_name = "\${var.prefix}-workspace"
+  location       = var.region
+}
+
+# Review before applying. This is a starting point, not production hardening.
+",
+    "filename": "main.tf",
+    "language": "hcl",
+  },
+]
+`;
