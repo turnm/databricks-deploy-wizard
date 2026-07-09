@@ -23,10 +23,6 @@ Personalised for: **AWS**
 - [ ] **Workspace is provisioned automatically** — A serverless workspace deploys immediately, backed by Databricks-hosted compute — nothing to configure in your AWS account yet.
 - [ ] **Run your first query** — Open SQL editor or a notebook, attach to serverless compute, and run a query against a sample or uploaded dataset.
 
-## Things to watch for
-
-- No AWS admin needed for this — express setup only needs a business email. You can start right away.
-
 ---
 
 Generated 2026-07-09 — verify against docs.databricks.com/aws as appropriate.
@@ -210,11 +206,6 @@ Personalised for: **Azure**
 - [ ] **Wire up Private Link and NPIP** — Enable Private Link and Secure Cluster Connectivity (No Public IP) as part of the same deployment — see the generated Bicep for the exact resources.
 - [ ] **Run your first query** — Launch the workspace, attach to a SQL warehouse or cluster, and run a query against a sample dataset.
 
-## Things to watch for
-
-- VNet injection must be chosen at workspace creation — it cannot be retrofitted onto an existing workspace.
-- Enable Private Link and Secure Cluster Connectivity (No Public IP) as part of the same deployment.
-
 ---
 
 Generated 2026-07-09 — verify against portal.azure.com and docs.databricks.com/azure as appropriate.
@@ -369,10 +360,6 @@ Personalised for: **GCP**
 - [ ] **Sign up with a Google identity** — Complete signup — the subscriber becomes the first account admin.
 - [ ] **Create a workspace** — From the account console, create a workspace in a project with sufficient CPU/IP quota.
 - [ ] **Run your first query** — Launch the workspace and run a query against a sample dataset on GCE-backed compute.
-
-## Things to watch for
-
-- You'll need your GCP admin for about 15 minutes — there is no email-only route on GCP.
 
 ---
 

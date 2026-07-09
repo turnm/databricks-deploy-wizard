@@ -48,15 +48,6 @@ export function generateChecklist(answers: Answers, rec: Recommendation, now: Da
   }
   lines.push('')
 
-  if (rec.warnings.length > 0) {
-    lines.push('## Things to watch for')
-    lines.push('')
-    for (const warning of rec.warnings) {
-      lines.push(`- ${warning}`)
-    }
-    lines.push('')
-  }
-
   lines.push('---')
   lines.push('')
   lines.push(`Generated ${now.toISOString().slice(0, 10)} — verify against ${docsLinkByCloud[rec.cloud]} as appropriate.`)

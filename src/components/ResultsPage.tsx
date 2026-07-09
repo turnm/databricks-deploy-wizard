@@ -80,16 +80,6 @@ export function ResultsPage({ answers, onChangeAnswer, onRestart }: ResultsPageP
           {rec.cloudWasInferred && <span className="rounded-md bg-slate-100 px-2.5 py-1">Cloud recommended for you</span>}
         </div>
         {rec.billingNote && <p className="mt-3 text-sm text-slate-500">{rec.billingNote}</p>}
-        {rec.warnings.length > 0 && (
-          <ul className="mt-4 flex flex-col gap-1.5 border-t border-slate-100 pt-4 text-sm text-slate-600">
-            {rec.warnings.map((w) => (
-              <li key={w} className="flex gap-2">
-                <span aria-hidden>·</span>
-                <span>{w}</span>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
 
       <div className="flex flex-wrap gap-2">
