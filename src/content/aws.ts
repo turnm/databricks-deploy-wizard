@@ -4,6 +4,11 @@ export const aws = {
   displayName: 'AWS',
   docsLink: 'https://docs.databricks.com/aws/en/getting-started/',
 
+  signupUrls: {
+    express: 'https://signup.databricks.com/',
+    marketplace: 'https://aws.amazon.com/marketplace/pp/prodview-wtyi5lgtce6n6',
+  },
+
   routes: {
     'aws-express': {
       label: 'Express setup',
@@ -36,8 +41,8 @@ export const aws = {
       copyText:
         "Hi — I'm setting up a Databricks classic workspace on AWS. Databricks can send you an automated configuration request " +
         "(IAM temporary delegation) that creates the cross-account role, S3 root bucket and VPC for us. It needs one-time " +
-        "approval from someone with IAM admin rights, and the request expires after 7 days if unused. Could you approve it " +
-        "when it lands, or let me know a good time to do this together?",
+        "approval from someone with IAM admin rights — takes minutes on a quick call. Could you hop on a call to approve it, " +
+        "or let me know a good time to do this together?",
     }
   },
 
@@ -45,12 +50,12 @@ export const aws = {
     const steps: PlanStep[] = []
     if (opts.route === 'aws-express') {
       steps.push(
-        { title: 'Sign up', detail: 'Go to the Databricks AWS express setup page and sign up with your business email — no AWS credentials required.' },
+        { title: 'Sign up', detail: `Go to [signup.databricks.com](${aws.signupUrls.express}) and sign up with your business email — no AWS credentials required.` },
         { title: 'Workspace is provisioned automatically', detail: 'A serverless workspace deploys immediately, backed by Databricks-hosted compute — nothing to configure in your AWS account yet.' },
       )
     } else if (opts.route === 'aws-marketplace') {
       steps.push(
-        { title: 'Subscribe on AWS Marketplace', detail: `Search "Databricks" on AWS Marketplace and subscribe. You'll need ${aws.marketplacePermission} in your AWS account.` },
+        { title: 'Subscribe on AWS Marketplace', detail: `Open the [Databricks listing on AWS Marketplace](${aws.signupUrls.marketplace}) and subscribe. You'll need ${aws.marketplacePermission} in your AWS account.` },
         { title: 'Workspace auto-deploys', detail: 'Marketplace subscription auto-provisions a first serverless workspace, with trial credits applied.' },
       )
     } else {

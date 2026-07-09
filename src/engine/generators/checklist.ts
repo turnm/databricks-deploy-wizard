@@ -23,6 +23,7 @@ export function generateChecklist(answers: Answers, rec: Recommendation, now: Da
   lines.push('## Your setup')
   lines.push(`- **Cloud:** ${cloudDisplayName[rec.cloud]}`)
   lines.push(`- **Entry route:** ${rec.routeLabel}`)
+  lines.push(`- **Sign up here:** [${rec.signupLabel}](${rec.signupUrl})`)
   lines.push(`- **Workspace type:** ${rec.workspaceLabel}`)
   lines.push(`- **Region:** ${answers.region || '(not specified)'}`)
   if (rec.pricingTier) lines.push(`- **Pricing tier:** ${rec.pricingTier}`)

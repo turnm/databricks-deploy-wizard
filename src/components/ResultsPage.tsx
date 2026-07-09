@@ -1,4 +1,7 @@
+import type { AnchorHTMLAttributes } from 'react'
 import { useMemo, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { questions } from '../content/questions'
 import { recommend } from '../engine/decisionTree'
 import { generateBicep } from '../engine/generators/armBicep'
@@ -8,6 +11,7 @@ import { generateTerraform } from '../engine/generators/terraform'
 import type { Answers } from '../engine/types'
 import { CodeBlock } from './CodeBlock'
 import { DownloadButton } from './DownloadButton'
+import { MarkdownPreview } from './MarkdownPreview'
 
 interface ResultsPageProps {
   answers: Answers
@@ -22,6 +26,10 @@ const cloudDisplayName: Record<Answers['cloud'], string> = {
   azure: 'Azure',
   gcp: 'GCP',
   unsure: 'Not sure yet',
+}
+
+function ExternalLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return <a {...props} target="_blank" rel="noreferrer" />
 }
 
 function answerLabel(question: (typeof questions)[number], value: string | undefined): string {
@@ -58,6 +66,14 @@ export function ResultsPage({ answers, onChangeAnswer, onRestart }: ResultsPageP
           </span>
         </div>
         <p className="mt-2 text-slate-600">{rec.routeDescription}</p>
+        <a
+          href={rec.signupUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-flex items-center gap-2 rounded-md bg-orange-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-orange-700"
+        >
+          {rec.signupLabel} ↗
+        </a>
         <div className="mt-4 flex flex-wrap gap-2 text-sm text-slate-500">
           <span className="rounded-md bg-slate-100 px-2.5 py-1">{rec.workspaceLabel}</span>
           {rec.pricingTier && <span className="rounded-md bg-slate-100 px-2.5 py-1">{rec.pricingTier} tier</span>}
@@ -111,7 +127,7 @@ export function ResultsPage({ answers, onChangeAnswer, onRestart }: ResultsPageP
           {tab === 'checklist' && (
             <div className="flex flex-col gap-4">
               <DownloadButton filename="databricks-checklist.md" contents={checklist} label="Download checklist (.md)" />
-              <CodeBlock filename="databricks-checklist.md" contents={checklist} />
+              <MarkdownPreview markdown={checklist} />
             </div>
           )}
 
@@ -158,7 +174,11 @@ export function ResultsPage({ answers, onChangeAnswer, onRestart }: ResultsPageP
                   </span>
                   <div>
                     <div className="font-medium text-slate-900">{step.title}</div>
-                    <div className="text-sm text-slate-600">{step.detail}</div>
+                    <div className="prose prose-sm max-w-none text-slate-600 prose-p:my-0 prose-a:text-orange-600 prose-a:no-underline hover:prose-a:underline">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: ExternalLink }}>
+                        {step.detail}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 </li>
               ))}

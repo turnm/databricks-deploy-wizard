@@ -55,11 +55,13 @@ function buildAws(answers: Answers, cloudWasInferred: boolean): Recommendation {
     route,
     routeLabel: aws.routes[route].label,
     routeDescription: aws.routes[route].description,
+    signupUrl: route === 'aws-marketplace' ? aws.signupUrls.marketplace : aws.signupUrls.express,
+    signupLabel: route === 'aws-marketplace' ? 'Subscribe on AWS Marketplace' : 'Sign up at signup.databricks.com',
     workspaceType: needsClassic ? 'aws-classic' : 'serverless',
     workspaceLabel: needsClassic ? 'Classic workspace (own VPC)' : 'Serverless workspace',
     timeToFirstQuery: needsClassic
       ? answers.adminRights === 'no'
-        ? 'A few days (waiting on admin approval for the cross-account role)'
+        ? 'Same day — get your AWS admin on a quick call to approve it'
         : 'A few hours (VPC and cross-account role to provision)'
       : 'Minutes',
     warnings,
@@ -87,6 +89,8 @@ function buildAzure(answers: Answers, cloudWasInferred: boolean): Recommendation
     route: 'azure-portal',
     routeLabel: azure.routes['azure-portal'].label,
     routeDescription: azure.routes['azure-portal'].description,
+    signupUrl: azure.signupUrls.portal,
+    signupLabel: 'Open the Azure Portal',
     workspaceType: needsVnetInjection ? 'azure-vnet-injected' : 'azure-standard',
     workspaceLabel: needsVnetInjection ? 'VNet-injected workspace (Premium)' : 'Standard workspace (Premium)',
     timeToFirstQuery: needsVnetInjection ? 'A few hours (networking decisions are made at creation time)' : 'Minutes to an hour',
@@ -118,12 +122,14 @@ function buildGcp(answers: Answers, cloudWasInferred: boolean): Recommendation {
     route: 'gcp-marketplace',
     routeLabel: gcp.routes['gcp-marketplace'].label,
     routeDescription: gcp.routes['gcp-marketplace'].description,
+    signupUrl: gcp.signupUrls.marketplace,
+    signupLabel: 'Subscribe on Google Cloud Marketplace',
     workspaceType: needsCustomVpc ? 'gcp-customer-vpc' : 'gcp-standard',
     workspaceLabel: needsCustomVpc ? 'Customer-managed VPC workspace' : 'Standard workspace',
     timeToFirstQuery: needsCustomVpc
-      ? 'Half a day (VPC and quota setup)'
+      ? 'A few hours (VPC and quota setup)'
       : answers.adminRights === 'no'
-        ? 'A few days (waiting on admin for the Marketplace subscription)'
+        ? 'Same day — get your GCP admin on a quick 15-minute call'
         : 'About an hour',
     warnings,
     adminRequest: answers.adminRights === 'no' ? gcp.adminRequest() : undefined,

@@ -4,6 +4,10 @@ export const gcp = {
   displayName: 'GCP',
   docsLink: 'https://docs.databricks.com/gcp/en/getting-started/',
 
+  signupUrls: {
+    marketplace: 'https://console.cloud.google.com/marketplace/product/databricks-prod/databricks',
+  },
+
   routes: {
     'gcp-marketplace': {
       label: 'Google Cloud Marketplace',
@@ -22,15 +26,15 @@ export const gcp = {
         'Databricks on GCP is subscribed via Google Cloud Marketplace, which needs billing enabled on the project and someone with Billing Account Administrator and Project Owner rights to complete the subscription — about 15 minutes of their time.',
       copyText:
         "Hi — I'd like to subscribe to Databricks via Google Cloud Marketplace for our project. This needs billing enabled and " +
-        "Billing Account Administrator + Project Owner rights, which I don't have. Could you either do the subscription " +
-        "step yourself (Marketplace → Databricks → Subscribe), or grant me those roles for about 15 minutes so I can do it? " +
-        "Compute will run on GCE inside our own project either way.",
+        "Billing Account Administrator + Project Owner rights, which I don't have. Could you hop on a quick 15-minute call so " +
+        "we can do the subscription step together (Marketplace → Databricks → Subscribe)? Compute will run on GCE inside our " +
+        "own project either way.",
     }
   },
 
   planSteps(opts: { needsCustomVpc: boolean }): PlanStep[] {
     const steps: PlanStep[] = [
-      { title: 'Open Google Cloud Marketplace', detail: 'Search "Databricks" on GCP Marketplace and click Subscribe.' },
+      { title: 'Open Google Cloud Marketplace', detail: `Go to the [Databricks listing on Google Cloud Marketplace](${gcp.signupUrls.marketplace}) and click Subscribe.` },
       { title: 'Sign up with a Google identity', detail: 'Complete signup — the subscriber becomes the first account admin.' },
       { title: 'Create a workspace', detail: 'From the account console, create a workspace in a project with sufficient CPU/IP quota.' },
     ]

@@ -68,6 +68,9 @@ export interface Recommendation {
   route: EntryRoute
   routeLabel: string
   routeDescription: string
+  /** Where to actually go to start this route — the real sign-up/create page. */
+  signupUrl: string
+  signupLabel: string
   workspaceType: WorkspaceType
   workspaceLabel: string
   timeToFirstQuery: string
