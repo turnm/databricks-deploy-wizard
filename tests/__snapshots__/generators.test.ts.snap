@@ -21,6 +21,7 @@ Personalised for: **AWS**
 
 - [ ] **Sign up** — Go to [signup.databricks.com](https://signup.databricks.com/) and sign up with your business email — no AWS credentials required.
 - [ ] **Workspace is provisioned automatically** — A serverless workspace deploys immediately, backed by Databricks-hosted compute — nothing to configure in your AWS account yet.
+- [ ] **You're already the admin** — The email you signed up with is automatically the admin of your account and this workspace — nothing else to set up. There's also an account console (accounts.cloud.databricks.com) for managing multiple workspaces later; you don't need it yet.
 - [ ] **Run your first query** — Open SQL editor or a notebook, attach to serverless compute, and run a query against a sample or uploaded dataset.
 
 ---
@@ -204,6 +205,7 @@ Personalised for: **Azure**
 - [ ] **Open the Azure Portal** — Go to [portal.azure.com](https://portal.azure.com/) → Create a resource → Analytics → Azure Databricks.
 - [ ] **Configure the workspace** — Pick your subscription, resource group and region. Choose the Premium pricing tier, and enable VNet injection now — it cannot be added after creation. Full steps: [Microsoft Learn — create a workspace](https://learn.microsoft.com/en-us/azure/databricks/admin/workspace/create-workspace).
 - [ ] **Wire up Private Link and NPIP** — Enable Private Link and Secure Cluster Connectivity (No Public IP) as part of the same deployment — see the generated Bicep for the exact resources.
+- [ ] **You're already the admin** — Creating the workspace makes you its admin automatically — nothing else to set up. There's also a separate account console (accounts.azuredatabricks.net) for things like Unity Catalog across multiple workspaces later; you don't need it yet.
 - [ ] **Run your first query** — Launch the workspace, attach to a SQL warehouse or cluster, and run a query against a sample dataset.
 
 ---
@@ -359,6 +361,7 @@ Personalised for: **GCP**
 - [ ] **Open Google Cloud Marketplace** — Go to the [Databricks listing on Google Cloud Marketplace](https://console.cloud.google.com/marketplace/product/databricks-prod/databricks) and click Subscribe.
 - [ ] **Sign up with a Google identity** — Complete signup — the subscriber becomes the first account admin.
 - [ ] **Create a workspace** — From the account console, create a workspace in a project with sufficient CPU/IP quota.
+- [ ] **You're already the admin** — Subscribing makes you the admin of your account and this workspace automatically — nothing else to set up. There's also a separate account console (accounts.gcp.databricks.com) for managing multiple workspaces later; you don't need it yet.
 - [ ] **Run your first query** — Launch the workspace and run a query against a sample dataset on GCE-backed compute.
 
 ---

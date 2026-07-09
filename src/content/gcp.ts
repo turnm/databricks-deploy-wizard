@@ -41,6 +41,10 @@ export const gcp = {
     if (opts.needsCustomVpc) {
       steps.push({ title: 'Attach a customer-managed VPC', detail: 'Provision a VPC with the two required secondary IP ranges before creating the workspace — see the generated Terraform.' })
     }
+    steps.push({
+      title: "You're already the admin",
+      detail: 'Subscribing makes you the admin of your account and this workspace automatically — nothing else to set up. There\'s also a separate account console (accounts.gcp.databricks.com) for managing multiple workspaces later; you don\'t need it yet.',
+    })
     steps.push({ title: 'Run your first query', detail: 'Launch the workspace and run a query against a sample dataset on GCE-backed compute.' })
     return steps
   },

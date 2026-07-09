@@ -46,6 +46,10 @@ export const azure = {
     if (opts.needsVnetInjection) {
       steps.push({ title: 'Wire up Private Link and NPIP', detail: 'Enable Private Link and Secure Cluster Connectivity (No Public IP) as part of the same deployment — see the generated Bicep for the exact resources.' })
     }
+    steps.push({
+      title: "You're already the admin",
+      detail: 'Creating the workspace makes you its admin automatically — nothing else to set up. There\'s also a separate account console (accounts.azuredatabricks.net) for things like Unity Catalog across multiple workspaces later; you don\'t need it yet.',
+    })
     steps.push({ title: 'Run your first query', detail: 'Launch the workspace, attach to a SQL warehouse or cluster, and run a query against a sample dataset.' })
     return steps
   },

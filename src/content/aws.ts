@@ -63,6 +63,10 @@ export const aws = {
         { title: 'Speak to your Databricks account team', detail: 'Direct/sales-led onboarding sets up billing and workspace access as part of the commercial agreement.' },
       )
     }
+    steps.push({
+      title: "You're already the admin",
+      detail: 'The email you signed up with is automatically the admin of your account and this workspace — nothing else to set up. There\'s also an account console (accounts.cloud.databricks.com) for managing multiple workspaces later; you don\'t need it yet.',
+    })
     steps.push({ title: 'Run your first query', detail: 'Open SQL editor or a notebook, attach to serverless compute, and run a query against a sample or uploaded dataset.' })
     if (opts.needsClassic) {
       steps.push({ title: 'Plan the classic workspace', detail: 'When you need networking or residency controls, use automated configuration (or the generated Terraform) to stand up a classic workspace in your own VPC.' })
